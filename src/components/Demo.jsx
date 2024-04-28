@@ -1,23 +1,36 @@
 import { AiOutlineEnter } from "react-icons/ai";
 import { linkIcon } from "../assets";
 import { useState } from "react";
+import { useLazyGetSummaryQuery } from "./services/article";
 
 const Demo = () => {
-  const [article,setArticle] = useState({
-    url:'',
-    summary:''
-  })
-  const handleSubmit = async(e)=>{
-    alert("submitted")
-  }
+  const [article, setArticle] = useState({
+    url: '',
+    summary: '',
+  });
+  const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { data } = await getSummary({ articleUrl: article.url });
+    if (data?.summary) {
+      const newArticle = { ...article, summary: data.summary };
+      setArticle(newArticle);
+      console.log("New Article:", newArticle);
+    } else {
+      console.log("No summary data received");
+    }
+    console.log(error);
+   
+};
+
   return (
-    
     <section className="mt-16 w-full max-w-xl">
       {/* search */}
-      <div className="flex flex-col w-full gap-2" >
+      <div className="flex flex-col w-full gap-2">
         <form
           className="relative flex justify-center items-center"
-          onSubmit={() => {handleSubmit}}
+          onSubmit={handleSubmit}
         >
           <img
             src={linkIcon}
@@ -27,26 +40,26 @@ const Demo = () => {
           <input
             type="url"
             placeholder="Enter a URL"
-            value=""
+            value={article.url}
             required
-            onChange={() => {}}
+            onChange={(e) => {
+              setArticle({
+                ...article,
+                url: e.target.value
+              });
+            }}
             className="url_input peer"
           />
-          <button 
-          type ="submit"
-          className="submit_btn
-          peer-focus:border-gray-700
-          peer-focus:text-gray-700"
+          <button
+            type="submit"
+            className="submit_btn peer-focus:border-gray-700 peer-focus:text-gray-700"
           >
-             <AiOutlineEnter />
-
-
+            <AiOutlineEnter />
           </button>
         </form>
-        {/*Browse Url history */}
-
+        {/* Browse Url history */}
       </div>
-      {/*Display results */}
+      {/* Display results */}
     </section>
   );
 };
