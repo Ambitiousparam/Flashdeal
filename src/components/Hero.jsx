@@ -4,16 +4,16 @@ import{logo} from "../assets"
 const Hero = () => {
   return (
     <>
-      <header className="w-full flex justify-center items-center flex-col">
-        <nav className="flex justify-between items-center flex-row w-full mb-10 pt-3">
-          <img src={logo} alt="logo" className="w-28 object-contain" />
-          <button
-        type="button"
-        onClick={() => window.open("https://github.com/ambitiousparam/")}
-        className="black_btn"
-      >
-        Github
-      </button>
+     <header className="w-full flex justify-center items-center flex-col">
+  <nav className="flex justify-between items-center flex-row w-full mb-10 pt-3">
+    <p className="text-3xl font-bold text-orange-450">Quick Read</p> 
+    <button
+      type="button"
+      onClick={() => window.open("https://github.com/ambitiousparam/quickread")}
+      className="black_btn"
+    >
+      Github
+    </button>
         </nav>
         <h1 className="head_text">
           Summarize Article with <br className=" max-md:hidden"/> 
