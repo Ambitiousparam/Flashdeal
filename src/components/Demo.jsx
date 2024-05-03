@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { copy, linkIcon, loader, tick } from "../assets";
 import { useLazyGetSummaryQuery } from "./services/article";
+import jsPDF from "jspdf";
 
 const Demo = () => {
   const [article, setArticle] = useState({
@@ -8,6 +9,7 @@ const Demo = () => {
     summary: "",
   });
   const [allArticles, setAllArticles] = useState([]);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [copied, setCopied] = useState("");
 
   // RTK lazy query
@@ -45,7 +47,17 @@ const Demo = () => {
     }
   };
 
-  // copy the url and toggle the icon for user feedback
+  const handlepdf =()=>{
+    if(article.summary){
+      const doc = new jsPDF();
+      const lines = doc.splitTextToSize(article.summary, doc.internal.pageSize.width - 20);
+      doc.text(10,10,lines);
+      doc.save("articles_sumary_pdf")
+    }
+
+  };
+
+  
   const handleCopy = (copyUrl) => {
     setCopied(copyUrl);
     navigator.clipboard.writeText(copyUrl);
@@ -145,6 +157,12 @@ const Demo = () => {
             </div>
           )
         )}
+      </div>
+      <div className="flex flex-col items-center" >
+        <button onClick={handlepdf} className=" mb-10 bg-blue-500 text-white rounded-md py-2 px-4 border border-blue-500 hover:bg-blue-600" 
+        disabled= {!article.summary || isDownloading}>
+          {isDownloading ?"Downloading...": "Download as pdf"}
+        </button>
       </div>
     </section>
   );
